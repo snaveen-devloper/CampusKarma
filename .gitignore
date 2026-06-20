@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+
+# Environment variables (keep secrets safe!)
+.env
+backend/.env
+
+# SQLite database files (ephemeral on Render anyway)
+*.db
+*.db-shm
+*.db-wal
+
+# Logs
+*.log
+backend/*.log
+
+# OS files
+.DS_Store
+Thumbs.db

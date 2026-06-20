@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>CampusKarma — Trade Knowledge. Earn Trust.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="campuskarma.css"/>
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div class="scr on" id="scr-splash">
+  <div class="splash-logo"><div class="splash-mark"><i class="ph-fill ph-graduation-cap"></i></div><span class="splash-name">CampusKarma</span></div>
+  <div class="splash-dots"><span></span><span></span><span></span></div>
+</div>
+
+<!-- AUTH -->
+<div class="scr" id="scr-auth">
+  <div class="auth-wrap">
+    <div class="auth-brand"><div class="auth-mark"><i class="ph-fill ph-graduation-cap"></i></div><div class="auth-brand-name">CampusKarma</div></div>
+    <div class="auth-tabs">
+      <div class="auth-tab on" onclick="switchAuthTab('login')">Sign In</div>
+      <div class="auth-tab" onclick="switchAuthTab('signup')">Create Account</div>
+    </div>
+    <div id="auth-err" class="auth-err" style="display:none"></div>
+    <div class="auth-form on" id="form-login">
+      <div class="fld"><label>Email</label><input class="inp" id="l-email" type="email" placeholder="you@example.com" autocomplete="email"/></div>
+      <div class="fld"><label>Password</label><input class="inp" id="l-pass" type="password" placeholder="Your password" autocomplete="current-password"/></div>
+      <button class="btn-p" id="login-btn" onclick="doLogin()">Sign In</button>
+      <div class="auth-note">No account? <span style="color:var(--em);cursor:pointer;font-weight:600" onclick="switchAuthTab('signup')">Sign up</span></div>
+    </div>
+    <div class="auth-form" id="form-signup">
+      <div class="fld-row">
+        <div class="fld"><label>Full Name</label><input class="inp" id="s-name" type="text" placeholder="Divya Ramesh"/></div>
+        <div class="fld"><label>Email</label><input class="inp" id="s-email" type="email" placeholder="you@college.edu"/></div>
+      </div>
+      <div class="fld-row">
+        <div class="fld"><label>Class / Year</label>
+          <select class="inp" id="s-cls"><option value="">— Select —</option><option>Class 9</option><option>Class 10</option><option>Class 11</option><option>Class 12</option><option>1st Year UG</option><option>2nd Year UG</option><option>3rd Year UG</option><option>4th Year UG</option></select>
+        </div>
+        <div class="fld"><label>School / College</label><input class="inp" id="s-school" type="text" placeholder="SRM Institute"/></div>
+      </div>
+      <div class="fld"><label>Password</label><input class="inp" id="s-pass" type="password" placeholder="Min. 6 characters"/></div>
+      <button class="btn-p" id="signup-btn" onclick="doSignup()">Create Account</button>
+      <div class="auth-note">Have an account? <span style="color:var(--em);cursor:pointer;font-weight:600" onclick="switchAuthTab('login')">Sign in</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING -->
+<div class="scr" id="scr-ob">
+  <div class="ob-box">
+    <div class="ob-brand"><div class="ob-brand-mark"><i class="ph-fill ph-graduation-cap"></i></div><div class="ob-brand-name">CampusKarma</div></div>
+    <div class="ob-tag">Set up your loop. Takes 60 seconds.</div>
+    <div class="ob-prog"><div class="op on" id="pp0"></div><div class="op" id="pp1"></div><div class="op" id="pp2"></div></div>
+    <div class="ob-step on" id="obs0">
+      <div class="ob-h">What can you <span style="color:var(--em)">teach?</span></div>
+      <div class="ob-sub">Subjects you're confident in. These earn you Karma Points.</div>
+      <div class="sg-grid" id="teach-grid"></div>
+      <button class="btn-p" onclick="obNext(0)">Continue</button>
+    </div>
+    <div class="ob-step" id="obs1">
+      <div class="ob-h">What do you want to <span style="color:var(--am)">learn?</span></div>
+      <div class="ob-sub">Subjects you need help with. We'll build the perfect loop.</div>
+      <div class="sg-grid" id="learn-grid"></div>
+      <button class="btn-p" onclick="obNext(1)">Continue</button>
+    </div>
+    <div class="ob-step" id="obs2">
+      <div class="ob-h">What's your <span style="color:var(--cy)">native language?</span></div>
+      <div class="ob-sub">Our AI Assistant handles translations, but knowing your native tongue helps us pair you better!</div>
+      <div class="sg-grid" id="lang-grid"></div>
+      <button class="btn-p" onclick="obNext(2)">Launch My Loop</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="scr" id="scr-app">
+  <div class="sb">
+    <div class="sb-logo"><div class="sb-mark"><i class="ph-fill ph-graduation-cap" style="font-size:1.4rem;color:var(--em)"></i></div><span class="sb-n">CampusKarma</span></div>
+    <div class="nav">
+      <div class="ni on" data-t="home" onclick="goTab('home',this)"><i class="ph ph-house"></i><span class="nl">Home</span></div>
+      <div class="ni" data-t="discover" onclick="goTab('discover',this)"><i class="ph ph-magnifying-glass"></i><span class="nl">Discover</span></div>
+      <div class="ni" data-t="chat" onclick="goTab('chat',this)"><i class="ph ph-chat-circle-text"></i><span class="nl">Chat</span></div>
+      <div class="ni" data-t="notes" onclick="goTab('notes',this)"><i class="ph ph-notebook"></i><span class="nl">Notes</span></div>
+      <div class="ni" data-t="requests" onclick="goTab('requests',this)"><i class="ph ph-users"></i><span class="nl">Requests</span><span class="ni-b" id="nb-req" style="display:none">0</span></div>
+      <div class="ni" data-t="sessions" onclick="goTab('sessions',this)"><i class="ph ph-calendar-blank"></i><span class="nl">Sessions</span></div>
+      <div class="ni" data-t="ai" onclick="goTab('ai',this)"><i class="ph ph-robot"></i><span class="nl">AI Insights</span></div>
+      <div class="ni" data-t="store" onclick="goTab('store',this)"><i class="ph ph-shopping-bag"></i><span class="nl">Store</span></div>
+      <div class="ni" data-t="wallet" onclick="goTab('wallet',this)"><i class="ph ph-wallet"></i><span class="nl">Wallet</span></div>
+      <div class="ni" data-t="profile" onclick="goTab('profile',this)"><i class="ph ph-user-circle"></i><span class="nl">Profile</span></div>
+    </div>
+    <div class="sb-bot">
+      <div class="sb-user" onclick="goTab('profile',document.querySelector('[data-t=profile]'))">
+        <div class="av" id="sb-av" style="width:28px;height:28px;font-size:.6rem"></div>
+        <div class="sb-uinfo"><div class="sb-uname" id="sb-uname">—</div><div class="sb-ukp" id="sb-ukp">— KP</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- HOME -->
+    <div class="tab on" id="tab-home">
+      <div class="topbar"><div class="pg-title" id="home-greet">Good morning</div><div class="tb-r"><div class="ic-btn" onclick="goTab('requests',document.querySelector('[data-t=requests]'))"><i class="ph ph-bell"></i></div></div></div>
+      <div class="xp-bar-wrap" id="xp-bar-card"></div>
+      <div class="streak-wrap"><div class="streak-inner"><div class="streak-fire"><i class="ph-fill ph-fire" style="color:#f97316;font-size:1.5rem"></i></div><div><div class="streak-num" id="streak-n">0</div><div class="streak-lbl">Day Streak</div></div><div class="streak-days" id="streak-days"></div></div></div>
+      <div class="kp3">
+        <div class="kc"><div class="kc-v" style="color:var(--em)" id="h-kp">0</div><div class="kc-l">Karma</div></div>
+        <div class="kc"><div class="kc-v" id="h-sess">0</div><div class="kc-l">Sessions</div></div>
+        <div class="kc"><div class="kc-v" style="color:var(--am)" id="h-badges">0</div><div class="kc-l">Badges</div></div>
+      </div>
+      <div class="sh"><h3>Daily Quests</h3><span style="font-size:.72rem;color:var(--t3)">Resets at midnight</span></div>
+      <div id="quests-list"></div>
+      <div class="dvd"></div>
+      <div class="sh"><h3>Top Matches</h3><button class="sh-a" onclick="goTab('discover',document.querySelector('[data-t=discover]'))">See all</button></div>
+      <div id="home-matches"></div>
+      <div class="dvd"></div>
+      <div class="sh"><h3>Live Activity</h3><span id="online-count" style="font-size:.72rem;color:var(--em);font-weight:600">— online</span></div>
+      <div id="activity-feed"></div>
+      <div class="dvd"></div>
+      <div class="sh"><h3>Leaderboard</h3></div>
+      <div id="home-lb"></div>
+    </div>
+
+    <!-- DISCOVER -->
+    <div class="tab" id="tab-discover">
+      <div class="topbar"><div class="pg-title">Discover</div><div id="disc-count" style="font-size:.78rem;color:var(--t3)"></div></div>
+      <div class="srch-wrap"><span class="srch-ic"><i class="ph ph-magnifying-glass"></i></span><input id="disc-search" placeholder="Search by name or subject…" oninput="renderDiscover()"/></div>
+      <div class="fltrs" id="disc-filters"></div>
+      <div id="disc-list"></div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="tab" id="tab-chat">
+      <div class="chat-left">
+        <div class="chat-left-title"><i class="ph ph-lock-key"></i> Encrypted Chats</div>
+        <div id="chat-conv-list"></div>
+      </div>
+      <div class="chat-panel" id="chat-panel">
+        <div class="chat-empty"><div style="font-size:2rem"><i class="ph-fill ph-chat-circle-dots" style="color:var(--em)"></i></div><div>Select a connected peer to start a secure chat</div><div style="font-size:.75rem;color:var(--t3)">End-to-end encrypted · No phone number needed</div></div>
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="tab" id="tab-notes">
+      <div class="topbar">
+        <div class="pg-title"><i class="ph ph-notebook"></i> Knowledge Space</div>
+        <div class="tb-r"><button class="btn-sm p" onclick="openNewNoteModal()">+ New Note</button></div>
+      </div>
+      <div class="req-tabs" style="margin-bottom:1rem">
+        <div class="rtab on" onclick="switchNotesTab('all',this)">Community Notes</div>
+        <div class="rtab" onclick="switchNotesTab('mine',this)">My Notes</div>
+      </div>
+      <div id="notes-list" style="display:flex;flex-direction:column;gap:12px;"></div>
+    </div>
+
+    <!-- REQUESTS -->
+    <div class="tab" id="tab-requests">
+      <div class="topbar"><div class="pg-title">Requests</div></div>
+      <div class="req-tabs">
+        <div class="rtab on" onclick="switchReqTab('recv',this)">Received</div>
+        <div class="rtab" onclick="switchReqTab('sent',this)">Sent</div>
+        <div class="rtab" onclick="switchReqTab('connected',this)">Connected</div>
+      </div>
+      <div id="req-list"></div>
+    </div>
+
+    <!-- SESSIONS -->
+    <div class="tab" id="tab-sessions">
+      <div class="topbar"><div class="pg-title">Sessions</div><div class="tb-r"><button class="btn-sm p" onclick="openBookModal()">+ Book</button></div></div>
+      <div class="cal" id="cal-el"></div>
+      <div class="sh"><h3 id="sess-date-ttl">All Sessions</h3></div>
+      <div id="sess-list"></div>
+    </div>
+
+    <!-- AI INSIGHTS -->
+    <div class="tab" id="tab-ai">
+      <div class="topbar"><div class="pg-title"><i class="ph ph-robot"></i> AI Insights</div></div>
+      <div class="ai-score-card">
+        <div class="ai-score-num" id="ai-teaching-score">—</div>
+        <div class="ai-score-lbl">Teaching Score / 10</div>
+        <div style="margin-top:.75rem;font-size:.75rem;color:var(--t2)">Powered by AI analysis of your teaching sessions</div>
+      </div>
+      <div class="ai-metrics">
+        <div class="ai-metric"><div class="ai-metric-v" id="ai-rep-score" style="color:var(--em)">—</div><div class="ai-metric-l">Reputation Score</div></div>
+        <div class="ai-metric"><div class="ai-metric-v" id="ai-sessions-count" style="color:var(--cy)">—</div><div class="ai-metric-l">Sessions Analyzed</div></div>
+      </div>
+      <div class="sh"><h3><i class="ph ph-chart-bar"></i> Recent Feedback</h3></div>
+      <div id="ai-feedback-list"></div>
+    </div>
+
+    <!-- STORE -->
+    <div class="tab" id="tab-store">
+      <div class="topbar"><div class="pg-title">Karma Store</div><div style="font-size:.78rem;font-weight:700;color:var(--am)" id="store-bal"></div></div>
+      <div style="font-size:.78rem;color:var(--t2);margin-bottom:1rem">Spend Karma Points to unlock exclusive boosts and features.</div>
+      <div class="store-grid" id="store-grid"></div>
+    </div>
+
+    <!-- WALLET -->
+    <div class="tab" id="tab-wallet">
+      <div class="topbar"><div class="pg-title">Karma Wallet</div></div>
+      <div class="w-hero">
+        <div class="w-bal" id="w-bal">0</div>
+        <div class="w-lbl">Karma Points</div>
+        <div class="w-acts">
+          <button class="btn-sm p" onclick="openBookModal()">Spend KP</button>
+          <button class="btn-sm o" onclick="toast('Complete sessions to earn more KP!','ok')">Earn More</button>
+          <button class="btn-sm a" onclick="buyInstant()"><i class="ph-fill ph-lightning" style="margin-right:4px;"></i>+100 Instant</button>
+        </div>
+      </div>
+      <div class="sh"><h3>Transactions</h3></div>
+      <div id="tx-list"></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="tab" id="tab-profile">
+      <div class="topbar"><div class="pg-title">Profile</div></div>
+      <div class="prof-hero">
+        <div class="av" id="pr-av" style="width:54px;height:54px;font-size:.9rem;border:2px solid var(--embd)"></div>
+        <div class="prof-info">
+          <div class="pn" id="pr-name">—</div>
+          <div class="pc" id="pr-cls">—</div>
+          <div class="pk" id="pr-kp">— KP</div>
+          <div id="pr-teaching-badge" style="display:none;align-items:center;gap:.35rem;margin-top:.35rem;font-size:.72rem;color:var(--em);font-weight:700"><i class="ph-fill ph-star"></i> Teaching Score: <span class="ts-val">0</span>/10</div>
+        </div>
+      </div>
+      <div class="prof-sec">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+          <div class="prof-sec-t" style="margin-bottom:0">My Interests</div>
+          <button class="btn-sm o" onclick="openEditInterests()"><i class="ph ph-pencil-simple" style="margin-right:4px;"></i>Edit</button>
+        </div>
+        <div id="pr-subj" style="display:flex;flex-wrap:wrap;gap:.4rem"></div>
+      </div>
+      <div class="prof-sec"><div class="prof-sec-t">Stats</div><div class="stats-g" id="pr-stats"></div></div>
+      <div class="prof-sec"><div class="prof-sec-t">Badges</div><div class="badge-grid" id="pr-badges"></div></div>
+      <div style="margin-top:.75rem;display:flex;gap:.6rem">
+        <button class="btn-g" style="border-radius:var(--r2)" onclick="doLogout()">Sign Out</button>
+        <button class="btn-sm d" style="border-radius:var(--r2);padding:.75rem 1rem;font-size:.8rem" onclick="openReport('self')">Report a User</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO CALL -->
+<div class="scr" id="scr-vid">
+  <div class="vid-info"><div class="vid-pname" id="vid-pname">—</div><div class="vid-subj" id="vid-subj">—</div><div class="vid-live">● SESSION ACTIVE</div></div>
+  <div class="vid-wrap">
+    <div class="vid-main"><div class="av" id="vid-main-av" style="width:80px;height:80px;font-size:1.4rem"></div></div>
+    <div class="vid-self"><div class="av" id="vid-self-av" style="width:36px;height:36px;font-size:.65rem"></div></div>
+    <div class="vid-lbl" id="vid-lbl">You</div>
+    <div class="vid-enc" id="vid-enc"><i class="ph-fill ph-lock-key"></i> E2E Encrypted</div>
+    <div class="vid-subtitles" id="vid-subtitles"></div>
+  </div>
+  <!-- Teacher Pulse Check panel -->
+  <div class="teacher-quiz-panel" id="teacher-quiz-panel">
+    <h4><i class="ph-fill ph-lightning" style="color:var(--am)"></i> Pulse Check — Push a question to your student</h4>
+    <div style="font-size:.72rem;color:var(--t3)">Generating questions…</div>
+  </div>
+  <div class="pomo"><i class="ph ph-timer" style="margin-right:4px;"></i><span>Pomodoro:</span><span class="pomo-timer" id="pomo-timer">25:00</span><button class="btn-sm o" onclick="togglePomo()">Start</button></div>
+  <div class="vid-timer" id="vid-timer">00:00</div>
+  <div class="vid-ctrl">
+    <div class="vc on" id="vc-mic" onclick="toggleVC('mic')"><i class="ph-fill ph-microphone"></i></div>
+    <div class="vc on" id="vc-cam" onclick="toggleVC('cam')"><i class="ph-fill ph-video-camera"></i></div>
+    <div class="vc on" onclick="toast('Whiteboard — coming soon','ok')"><i class="ph ph-chalkboard"></i></div>
+    <div class="vc end" onclick="endVid()"><i class="ph-fill ph-phone-slash"></i></div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="ovl" id="modal-book">
+  <div class="mbox"><div class="mhandle"></div><div class="mtit">Schedule a Session</div>
+    <div class="fld"><label>Connected Partner</label><select class="inp" id="bk-peer" onchange="updateBkSubj()"></select></div>
+    <div class="fld"><label>Subject</label><select class="inp" id="bk-subj"></select></div>
+    <div class="date-time-row">
+      <div class="fld" style="margin-bottom:0"><label>Date</label><input class="inp" type="date" id="bk-date"/></div>
+      <div class="fld" style="margin-bottom:0"><label>Time</label><input class="inp" type="time" id="bk-time"/></div>
+    </div>
+    <div class="fld" style="margin-top:.85rem"><label>I am</label>
+      <select class="inp" id="bk-role"><option value="teach">Teaching this session (+50 KP)</option><option value="learn">Learning this session (−50 KP)</option></select>
+    </div>
+    <div class="mrow" style="margin-top:1rem"><button class="btn-g" onclick="closeOvl('modal-book')">Cancel</button><button class="btn-p" onclick="confirmBook()">Confirm</button></div>
+  </div>
+</div>
+
+<div class="ovl" id="modal-req">
+  <div class="mbox"><div class="mhandle"></div><div class="mtit">Send Connection Request</div>
+    <div id="req-peer-info" style="margin-bottom:1rem"></div>
+    <div class="fld"><label>Subject to exchange</label><select class="inp" id="req-subj"></select></div>
+    <div class="fld"><label>Note <span style="color:var(--t3)">(optional)</span></label>
+      <textarea class="inp" id="req-note" rows="2" style="resize:none" placeholder="Hey, I can teach you Maths if you help with Chemistry…"></textarea>
+    </div>
+    <div class="mrow"><button class="btn-g" onclick="closeOvl('modal-req')">Cancel</button><button class="btn-p" onclick="confirmReq()">Send Request</button></div>
+  </div>
+</div>
+
+<div class="ovl" id="modal-rate">
+  <div class="mbox"><div class="mhandle"></div><div class="mtit">Rate Your Session</div>
+    <div style="display:flex;gap:6px;justify-content:center;margin-bottom:1.1rem">
+      <span class="star" onclick="setStar(1)"><i class="ph-fill ph-star"></i></span><span class="star" onclick="setStar(2)"><i class="ph-fill ph-star"></i></span>
+      <span class="star" onclick="setStar(3)"><i class="ph-fill ph-star"></i></span><span class="star" onclick="setStar(4)"><i class="ph-fill ph-star"></i></span><span class="star" onclick="setStar(5)"><i class="ph-fill ph-star"></i></span>
+    </div>
+    <div class="fld"><label>Feedback <span style="color:var(--t3)">(optional)</span></label>
+      <textarea class="inp" id="rate-txt" rows="2" style="resize:none" placeholder="Great explanation of the topic…"></textarea>
+    </div>
+    <div class="mrow"><button class="btn-g" onclick="closeOvl('modal-rate')">Skip</button><button class="btn-p" onclick="submitRate()">Submit (+15 KP)</button></div>
+  </div>
+</div>
+
+<div class="ovl" id="modal-interests">
+  <div class="mbox"><div class="mhandle"></div><div class="mtit">Edit Interests</div>
+    <div style="font-size:.78rem;color:var(--t3);margin-bottom:.85rem">Toggle <span style="color:var(--em);font-weight:600">Teach</span> or <span style="color:var(--am);font-weight:600">Learn</span> for each subject.</div>
+    <div id="sei-list"></div>
+    <div class="mrow"><button class="btn-g" onclick="closeOvl('modal-interests')">Cancel</button><button class="btn-p" onclick="saveInterests()">Save Changes</button></div>
+  </div>
+</div>
+
+<div class="ovl" id="modal-report">
+  <div class="mbox"><div class="mhandle"></div><div class="mtit">Report a User</div>
+    <div class="fld"><label>User being reported</label><select class="inp" id="report-peer"></select></div>
+    <div class="report-opts" id="report-opts">
+      <div class="report-opt" onclick="selectReport(this,'harassment')"><div class="check"></div><span style="font-size:.83rem;font-weight:600">Harassment or Bullying</span></div>
+      <div class="report-opt" onclick="selectReport(this,'inappropriate')"><div class="check"></div><span style="font-size:.83rem;font-weight:600">Inappropriate Content</span></div>
+      <div class="report-opt" onclick="selectReport(this,'spam')"><div class="check"></div><span style="font-size:.83rem;font-weight:600">Spam or Fake Profile</span></div>
+    </div>
+    <div class="fld"><label>Additional details</label>
+      <textarea class="inp" id="report-detail" rows="2" style="resize:none" placeholder="Describe what happened…"></textarea>
+    </div>
+    <div class="mrow"><button class="btn-g" onclick="closeOvl('modal-report')">Cancel</button><button class="btn-p" onclick="submitReport()">Submit Report</button></div>
+  </div>
+</div>
+
+<!-- SESSION REPORT MODAL -->
+<div class="ovl" id="modal-session-report">
+  <div class="mbox"><div class="mhandle"></div><div class="mtit"><i class="ph-fill ph-chart-bar" style="margin-right:6px"></i>Session Report</div>
+    <div class="sr-row"><span class="sr-label">Subject</span><span class="sr-value" id="sr-subject">—</span></div>
+    <div class="sr-row"><span class="sr-label">Duration</span><span class="sr-value" id="sr-duration">—</span></div>
+    <div class="sr-row"><span class="sr-label">Pulse Checks</span><span class="sr-value" id="sr-quiz">—</span></div>
+    <div class="sr-row"><span class="sr-label">XP Earned</span><span class="sr-value" id="sr-xp">—</span></div>
+    <div style="margin-top:1rem;padding:.85rem;background:var(--emb);border:1px solid var(--embd);border-radius:var(--r2);font-size:.8rem;color:var(--t2);line-height:1.5">
+      <i class="ph-fill ph-robot" style="margin-right:4px;"></i> AI Teaching Quality analysis will appear in the <strong style="color:var(--em)">AI Insights</strong> tab within moments.
+    </div>
+    <button class="btn-p" style="margin-top:1rem" onclick="closeOvl('modal-session-report')">Continue</button>
+  </div>
+</div>
+
+<!-- QUIZ POPUP (student receives mid-session) -->
+<div id="quiz-popup" class="ovl" style="align-items:flex-end">
+  <div class="quiz-popup-box">
+    <div class="quiz-popup-header">
+      <div class="quiz-popup-title"><i class="ph-fill ph-lightning" style="color:var(--am)"></i> Pulse Check from your teacher!</div>
+      <div class="quiz-timer-badge" id="qp-timer">30s</div>
+    </div>
+    <div class="quiz-question" id="qp-question">Loading question…</div>
+    <div class="qp-options" id="qp-options"></div>
+  </div>
+</div>
+
+<!-- NEW NOTE MODAL -->
+<div class="ovl" id="modal-note">
+  <div class="mbox" style="max-width:600px">
+    <div class="mhandle"></div>
+    <div class="mtit" id="mnote-title">Create Note</div>
+    <input type="hidden" id="mnote-id"/>
+    <div class="fld"><label>Title</label><input class="inp" type="text" id="mnote-name" placeholder="E.g. Calculus Derivatives Cheat Sheet"/></div>
+    <div class="fld">
+      <label>Content (Markdown Supported)</label>
+      <textarea class="inp" id="mnote-content" rows="8" style="resize:vertical;font-family:monospace" placeholder="# Heading\n- Point 1\n- Point 2"></textarea>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem">
+      <input type="checkbox" id="mnote-public" style="width:16px;height:16px;accent-color:var(--em)">
+      <label for="mnote-public" style="font-size:.85rem;color:var(--t2)">Make this note public (Viewable by everyone)</label>
+    </div>
+    <div class="mrow">
+      <button class="btn-g" onclick="closeOvl('modal-note')">Cancel</button>
+      <button class="btn-p" onclick="saveNote()">Save Note</button>
+    </div>
+  </div>
+</div>
+
+<!-- NOTE VIEW MODAL -->
+<div class="ovl" id="modal-view-note">
+  <div class="mbox" style="max-width:700px">
+    <div class="mhandle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;">
+      <div>
+        <div class="mtit" id="vnote-title" style="margin-bottom:4px;font-size:1.4rem"></div>
+        <div style="font-size:.75rem;color:var(--t3)" id="vnote-meta"></div>
+      </div>
+      <div style="display:flex;gap:8px" id="vnote-acts"></div>
+    </div>
+    <div class="inp" id="vnote-content" style="background:var(--s2);border:none;min-height:300px;font-size:.9rem;line-height:1.6;white-space:pre-wrap;color:var(--t1)"></div>
+    <div class="mrow" style="margin-top:1.25rem">
+      <button class="btn-p" onclick="closeOvl('modal-view-note')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEVEL UP -->
+<div id="levelup">
+  <div class="confetti" id="confetti-el"></div>
+  <div class="lu-badge" id="lu-badge"></div>
+  <div class="lu-title">Level Up!</div>
+  <div class="lu-sub" id="lu-sub"></div>
+  <button class="btn-p" style="width:200px;margin-top:1rem" onclick="document.getElementById('levelup').style.display='none'">Continue</button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast-el"><span id="toast-msg"></span></div>
+
+<script src="js/api.js"></script>
+<script src="js/state.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/notes.js"></script>
+<script src="js/session-quiz.js"></script>
+<script src="js/gamification.js"></script>
+</body>
+</html>
