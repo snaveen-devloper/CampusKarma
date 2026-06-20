@@ -1,5 +1,8 @@
 'use strict';
-const API = 'http://localhost:3000/api';
+// Auto-detect API base: use same origin in production, localhost in dev
+const IS_DEV = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE = IS_DEV ? 'http://localhost:3000' : window.location.origin;
+const API = API_BASE + '/api';
 let TOKEN = localStorage.getItem('ck_token') || '';
 
 function setToken(t) { TOKEN = t; localStorage.setItem('ck_token', t); }
@@ -22,7 +25,9 @@ const wsHandlers = {};
 function onWS(type, fn) { wsHandlers[type] = fn; }
 
 function connectWS() {
-  ws = new WebSocket('ws://localhost:3000');
+  const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const wsHost = IS_DEV ? 'localhost:3000' : window.location.host;
+  ws = new WebSocket(`${wsProtocol}//${wsHost}`);
   ws.onopen = () => ws.send(JSON.stringify({ type: 'auth', token: TOKEN }));
   ws.onmessage = (e) => {
     let msg; try { msg = JSON.parse(e.data); } catch { return; }
