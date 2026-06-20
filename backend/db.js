@@ -1,21 +1,57 @@
 'use strict';
-const sqlite3 = require('sqlite3').verbose();
-const { open } = require('sqlite');
+const Database = require('better-sqlite3');
 const path = require('path');
 
-let dbPromise = null;
+let _wrapper = null;
 
-async function initDB() {
-  if (dbPromise) return dbPromise;
-  
-  dbPromise = open({
-    filename: path.join(__dirname, 'campuskarma.db'),
-    driver: sqlite3.Database
-  }).then(async (db) => {
-    await db.exec('PRAGMA journal_mode = WAL;');
-    await db.exec('PRAGMA foreign_keys = ON;');
-    
-    await db.exec(`
+/**
+ * Creates a Promise-based wrapper around a better-sqlite3 Database instance.
+ * This makes the API compatible with the old async `sqlite` package so no
+ * route files need to change.
+ */
+function createWrapper(db) {
+  return {
+    run(sql, ...args) {
+      try {
+        const info = db.prepare(sql).run(...args.flat());
+        return Promise.resolve({ lastID: info.lastInsertRowid, changes: info.changes });
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    },
+    get(sql, ...args) {
+      try {
+        return Promise.resolve(db.prepare(sql).get(...args.flat()));
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    },
+    all(sql, ...args) {
+      try {
+        return Promise.resolve(db.prepare(sql).all(...args.flat()));
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    },
+    exec(sql) {
+      try {
+        db.exec(sql);
+        return Promise.resolve();
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    }
+  };
+}
+
+function initDB() {
+  if (_wrapper) return Promise.resolve(_wrapper);
+
+  const db = new Database(path.join(__dirname, 'campuskarma.db'));
+  db.pragma('journal_mode = WAL');
+  db.pragma('foreign_keys = ON');
+
+  db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       uid TEXT PRIMARY KEY,
       name TEXT NOT NULL,
@@ -176,31 +212,29 @@ async function initDB() {
       ts INTEGER NOT NULL,
       FOREIGN KEY(author_uid) REFERENCES users(uid)
     );
-    `);
-    
-    return db;
-  }).then(async (db) => {
-    // Run migrations for columns added later
-    const migrations = [
-      `ALTER TABLE users ADD COLUMN native_lang TEXT DEFAULT 'English'`,
-      `ALTER TABLE users ADD COLUMN rep_score REAL DEFAULT 1.0`,
-      `ALTER TABLE users ADD COLUMN teaching_score REAL DEFAULT 0`,
-      `ALTER TABLE users ADD COLUMN pub_key TEXT DEFAULT ''`,
-      `ALTER TABLE users ADD COLUMN color TEXT DEFAULT '#10b981'`,
-      `ALTER TABLE users ADD COLUMN strikes INTEGER DEFAULT 0`,
-      `ALTER TABLE users ADD COLUMN is_banned INTEGER DEFAULT 0`,
-      `ALTER TABLE sessions ADD COLUMN role1 TEXT DEFAULT 'teach'`,
-    ];
-    for (const sql of migrations) {
-      try { await db.exec(sql); } catch (e) {
-        // Ignore 'duplicate column name' errors - column already exists
-        if (!e.message.includes('duplicate column')) console.error('Migration skipped:', e.message);
-      }
+  `);
+
+  // Run migrations for columns added later — errors ignored if column already exists
+  const migrations = [
+    `ALTER TABLE users ADD COLUMN native_lang TEXT DEFAULT 'English'`,
+    `ALTER TABLE users ADD COLUMN rep_score REAL DEFAULT 1.0`,
+    `ALTER TABLE users ADD COLUMN teaching_score REAL DEFAULT 0`,
+    `ALTER TABLE users ADD COLUMN pub_key TEXT DEFAULT ''`,
+    `ALTER TABLE users ADD COLUMN color TEXT DEFAULT '#10b981'`,
+    `ALTER TABLE users ADD COLUMN strikes INTEGER DEFAULT 0`,
+    `ALTER TABLE users ADD COLUMN is_banned INTEGER DEFAULT 0`,
+    `ALTER TABLE sessions ADD COLUMN role1 TEXT DEFAULT 'teach'`,
+  ];
+  for (const sql of migrations) {
+    try {
+      db.exec(sql);
+    } catch (e) {
+      if (!e.message.includes('duplicate column')) console.error('Migration skipped:', e.message);
     }
-    return db;
-  });
-  
-  return dbPromise;
+  }
+
+  _wrapper = createWrapper(db);
+  return Promise.resolve(_wrapper);
 }
 
 module.exports = { initDB };
